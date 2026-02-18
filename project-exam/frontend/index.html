@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOps Bookstore</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>📚 DevOps Bookstore Version 1.0.0</h1>
+        <p>A simple project for learning DevOps</p>
+    </header>
+
+    <main>
+        <section id="add-book">
+            <h2>Add New Book</h2>
+            <form id="book-form">
+                <input type="text" id="title" placeholder="Book Title" required>
+                <input type="text" id="author" placeholder="Author" required>
+                <input type="number" id="price" placeholder="Price" step="0.01" required>
+                <input type="text" id="cover_url" placeholder="Cover Image URL">
+                <button type="submit">Add Book</button>
+            </form>
+        </section>
+
+        <section id="book-list-section">
+            <h2>Our Collections</h2>
+            <div id="book-list" class="book-grid">
+                <!-- Books will be loaded here -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 DevOps Training Project</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

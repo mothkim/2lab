@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  db:
+    build: ./database
+    container_name: bookstore_db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=bookstore
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    # Removed host-mount volume for init.sql to avoid permission issues
+    networks:
+      - bookstore_network
+
+  backend:
+    build: ./backend
+    image: project-exam-backend:${TAG:-latest}
+    container_name: bookstore_backend
+    environment:
+      - DB_HOST=db
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=bookstore
+      - DB_PORT=5432
+      - PORT=3000
+    depends_on:
+      - db
+    networks:
+      - bookstore_network
+
+  frontend:
+    build: ./frontend
+    image: project-exam-frontend:${TAG:-latest}
+    container_name: bookstore_frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - bookstore_network
+
+networks:
+  bookstore_network:
+    driver: bridge
+
+volumes:
+  pg_data:

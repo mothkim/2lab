@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bookstore-db
+  namespace: bookstore
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bookstore-db
+  template:
+    metadata:
+      labels:
+        app: bookstore-db
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:alpine
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            configMapKeyRef:
+              name: bookstore-config
+              key: DB_USER
+        - name: POSTGRES_DB
+          valueFrom:
+            configMapKeyRef:
+              name: bookstore-config
+              key: DB_NAME
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: bookstore-secret
+              key: POSTGRES_PASSWORD
+        volumeMounts:
+        - name: db-init
+          mountPath: /docker-entrypoint-initdb.d/init.sql
+          subPath: init.sql
+      volumes:
+      - name: db-init
+        configMap:
+          name: bookstore-config
+          items:
+          - key: init.sql
+            path: init.sql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bookstore-db
+  namespace: bookstore
+spec:
+  selector:
+    app: bookstore-db
+  ports:
+  - port: 5432
+    targetPort: 5432

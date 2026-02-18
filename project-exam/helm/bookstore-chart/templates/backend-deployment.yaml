@@ -1,0 +1,32 @@
+# templates/backend-deployment.yaml: Template สำหรับ Deployment ของ API Backend
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.backend.name }}
+  labels:
+    {{- include "bookstore.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.backend.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "bookstore.selectorLabels" . | nindent 6 }}
+      app: backend
+  template:
+    metadata:
+      labels:
+        {{- include "bookstore.selectorLabels" . | nindent 8 }}
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
+        imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.backend.service.port }}
+        envFrom:
+        - configMapRef:
+            name: bookstore-config
+        - secretRef:
+            name: bookstore-secret
+        resources:
+          {{- toYaml .Values.backend.resources | nindent 10 }}
