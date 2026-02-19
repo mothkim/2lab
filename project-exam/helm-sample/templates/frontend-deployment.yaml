@@ -1,26 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.frontend.name }}
+  name: {{ .Values.nginx.name }}
   labels:
-    {{- include "bookstore.labels" . | nindent 4 }}
+    {{- include "sample.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.frontend.replicaCount }}
+  replicas: {{ .Values.nginx.replicaCount }}
   selector:
     matchLabels:
-      {{- include "bookstore.selectorLabels" . | nindent 6 }}
-      app: frontend
+      {{- include "sample.selectorLabels" . | nindent 6 }}
+      app: nginx
   template:
     metadata:
       labels:
-        {{- include "bookstore.selectorLabels" . | nindent 8 }}
-        app: frontend
+        {{- include "sample.selectorLabels" . | nindent 8 }}
+        app: nginx
     spec:
       containers:
-      - name: frontend
-        image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
-        imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+      - name: nginx
+        image: "{{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag }}"
+        imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
         ports:
-        - containerPort: {{ .Values.frontend.service.port }}
+        - containerPort: {{ .Values.nginx.service.port }}
         resources:
-          {{- toYaml .Values.frontend.resources | nindent 10 }}
+          {{- toYaml .Values.nginx.resources | nindent 10 }}

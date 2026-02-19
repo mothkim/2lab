@@ -1,41 +1,10 @@
-# values.yaml: ไฟล์ที่รวบรวมตัวแปร (Variables) ทั้งหมดที่ต้องการให้ปรับเปลี่ยนได้ (Parameterization)
-# ทุกค่าที่นี่สามารถถูกเรียกใช้ใน templates โดยผ่านวัตถุ .Values
+namespace: sample
 
-namespace: bookstore
-
-database:
-  name: bookstore-db
-  dbName: bookstore
-  user: postgres
-  # In a real production scenario, use a more secure password management
-  password: postgres
+nginx:
+  name: sample-frontend
+  label: nginx
   image:
-    repository: postgres
-    tag: 15-alpine
-  service:
-    port: 5432
-
-backend:
-  name: backend
-  image:
-    repository: project-exam-backend
-    tag: latest
-    pullPolicy: IfNotPresent
-  service:
-    port: 3000
-  replicaCount: 1
-  resources:
-    limits:
-      cpu: 500m
-      memory: 512Mi
-    requests:
-      cpu: 100m
-      memory: 128Mi
-
-frontend:
-  name: bookstore-frontend
-  image:
-    repository: project-exam-frontend
+    repository: nginx
     tag: latest
     pullPolicy: IfNotPresent
   service:
@@ -54,4 +23,3 @@ ingress:
   className: nginx
   annotations:
     kubernetes.io/ingress.class: nginx
-  # host: bookstore.local # Set this if you have a specific domain
