@@ -70,3 +70,32 @@ helm uninstall bookstore -n bookstore
 ---
 > [!NOTE]
 > อย่าลืมตรวจสอบว่า Image ชื่อ `project-exam-backend:latest` และ `project-exam-frontend:latest` ถูกโหลดเข้าไปใน Cluster (เช่น Kind) เรียบร้อยแล้วก่อนทำการติดตั้ง
+
+---
+helm install nginx-sample ./helm-sample -n sample-ns
+|
+└── 📦 Namespace: sample-ns
+    |
+    ├── 🛡️ Helm Release: nginx-sample (Logical Manager)
+    │   └── 📑 Metadata stored in Secret: sh.helm.release.v1.nginx-sample.v1
+    │
+    └── 🏗️ Kubernetes Resources (Mapped with Labels)
+        │
+        ├── 🌐 Ingress: sample-ingress
+        │   └── 🏷️ labels: [instance: nginx-sample]
+        │
+        ├── 🔌 Service: sample-frontend
+        │   ├── 🏷️ labels: [instance: nginx-sample]
+        │   └── 🎯 selector: [instance: nginx-sample] (ใช้ชี้ไปที่ Pod)
+        │
+        ├── 📈 HPA: sample-frontend-hpa
+        │   ├── 🏷️ labels: [instance: nginx-sample]
+        │   └── 🎯 target: Deployment/sample-frontend
+        │
+        └── 🏗️ Deployment: sample-frontend
+            ├── 🏷️ labels: [instance: nginx-sample]  (ที่ตัว Deployment เอง)
+            ├── 🎯 selector: [instance: nginx-sample] (ใช้คุม ReplicaSet)
+            └── 📦 Pod Template
+                ├── 🏷️ labels: [instance: nginx-sample] (ติดไปกับทุก Pod ที่เกิดใหม่)
+                └── 🚀 Container: nginx
+                    └── 🖼️ Image: nginx:latest
